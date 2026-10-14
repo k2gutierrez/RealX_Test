@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+node_modules.incomplete/
+web3/node_modules/
+
+# Next.js output
+.next/
+out/
+.vercel/
+
+# Hardhat output
+web3/artifacts/
+web3/cache/
+web3/typechain-types/
+web3/.hardhat-appdata/
+web3/deployments/hardhat.json
+
+# Local environment and secrets
+.env
+.env.local
+.env.*.local
+web3/.env
+web3/.env.local
+!.env.example
+!web3/.env.example
+
+# Logs and local tooling
+*.log
+npm-debug.log*
+.DS_Store
+.docx-review/
+.agents/
+.codex/
+
+# Editors and operating systems
+.idea/
+Thumbs.db
+Desktop.ini

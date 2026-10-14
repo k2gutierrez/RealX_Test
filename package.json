@@ -1,0 +1,24 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start",
+    "lint": "node node_modules/next/dist/bin/next lint",
+    "test:data": "node scripts/check-data-layer.js",
+    "test:completeness": "node scripts/check-completeness.js",
+    "test:smoke": "node scripts/smoke-stage5.js",
+    "check:security": "node scripts/check-security.js",
+    "check:live": "node scripts/check-live-readiness.js",
+    "verify:pinata": "node scripts/verify-pinata-auth.js",
+    "check:release": "npm run check:security && npm run check:live && npm run build && npm run test:smoke"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "next": "13.4.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}
