@@ -18,7 +18,7 @@ $ forge install OpenZeppelin/openzeppelin-contracts
 - * Using owner functions only is considered a centralization risk, the use of admin function is recommended (AccessControl.sol).
 - * Deleted the `onlyContractOwner` mofifier to replace with the `onlyOwner` modifier of openzeppelin.
 - * Deleted the contractOwner to use the function from `Ownable` to get owner address: `owner()`
-- 
+-
 - - ReentrancyGuard for the `nonReentrant` modfiier to prevent reentrancy attacks.
 - * Deleted the `nonReentrant` modifier of the contract to take the one on openzeppelin.
 - * Deleted the bool variable `entered` to replace for the nonReentrant modifier of openzeppelin.
@@ -38,7 +38,7 @@ $ forge install OpenZeppelin/openzeppelin-contracts
 - `likeReview` function modified. Removed the address user as it must be msg.sender.
 - `getHighestRatedProduct` function mofidied. ratin variable changed from storage to memory.
 
-## To check Coverage on contract run - 54 tests passed:
+## To check Coverage on contract run - 56 tests passed:
 ```shell
 $ forge coverage --ir-minimum --no-match-coverage "test/|script/" --report summary
 ```
