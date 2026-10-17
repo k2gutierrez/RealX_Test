@@ -5,6 +5,9 @@ pragma solidity ^0.8.9;
 /// @notice Marketplace contract matching the property and review flows used by
 /// the reference Real Estate Marketplace DApp tutorial.
 contract RealEstate {
+    /// Custom Errors
+    error RealEstate__CannotBuyOwnProperty();
+
     struct Property {
         uint256 productID;
         address owner;
@@ -242,15 +245,18 @@ contract RealEstate {
         address payable oldOwner = payable(item.owner);
 
         require(buyer == msg.sender, "Buyer must be caller");
-        require(buyer != oldOwner, "You cannot buy your own property");
+        if (buyer == oldOwner) revert RealEstate__CannotBuyOwnProperty();
+        // require(buyer != oldOwner, "You cannot buy your own property"); -> already checked but I replace ir for a Custom Error.
         require(msg.value == item.price, "Send the exact property price");
 
         item.owner = buyer;
-        (bool sent, ) = oldOwner.call{value: msg.value}("");
-        require(sent, "Payment transfer failed");
 
         emit PropertySold(id, oldOwner, buyer, msg.value);
         emit PropertyResold(id, oldOwner, buyer, msg.value);
+
+        (bool sent, ) = oldOwner.call{value: msg.value}("");
+        require(sent, "Payment transfer failed");
+
     }
 
     function getAllProperties() external view returns (Property[] memory) {

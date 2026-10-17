@@ -115,7 +115,7 @@ describe("RealEstate", function () {
 
     await expectRevert(
       marketplace.connect(buyer).buyProperty(1, buyer.address, { value: oneEther })
-    , "You cannot buy your own property");
+    , "RealEstate__CannotBuyOwnProperty");
   });
 
   it("rejects underpayment, overpayment, and forged wallet arguments", async function () {
