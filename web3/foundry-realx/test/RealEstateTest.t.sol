@@ -7,7 +7,7 @@ import {DeployRealStateScript} from "../script/DeployRealStateScript.s.sol";
 
 contract RealEstateTest is Test {
     // Constants
-    uint256 STARTING_BALANCE_VALUE_TO_DEAL = 100 ether;
+    uint256 constant STARTING_BALANCE_VALUE_TO_DEAL = 100 ether;
 
     // Real Estate contract
     RealEstateV2Proposal public realEstate;
@@ -1230,6 +1230,41 @@ contract RealEstateTest is Test {
         realEstate.addReview(2, 5, "Also great");
 
         assertEq(realEstate.getHighestRatedProduct(), 2);
+    }
+
+    //// Fuzz Testing
+    function testFuzz_buyProperty_Success(uint96 paymentAmount) external {
+        uint256 propertyPrice = 2 ether;
+        
+        vm.prank(owner);
+        realEstate.updateListingPrice(1e9);
+        _ListProperty(1e9, user1, propertyPrice, "Property 1", "Residence", "http...", "addr 1", "desc 1");
+        
+        uint256 id = 1; // First property ID
+
+        // Bound the input. 
+        // We want to test successful purchases (>= 2 ether).
+        // but we don't want to overflow the user's balance.
+        uint256 sendValue = bound(paymentAmount, propertyPrice, STARTING_BALANCE_VALUE_TO_DEAL);
+
+        vm.prank(user2);
+        realEstate.buyProperty{value: sendValue}(id);
+
+        // 4. Assertions
+        (, address newOwner,,,,,,,,) = realEstate.getProperty(id);
+        assertEq(newOwner, user2);
+        
+        // Ensure the contract returns the remaining Eth back to the buyer after getting the Fee.
+        assertEq(address(realEstate).balance, 1e9, "Contract should only hold the listing fee");
+    }
+
+    //// Invariant tests
+    function invariant_PropertyOwnerIsNeverZero() external view {
+        uint256 totalProps = realEstate.getPropertyIndex();
+        for (uint256 i = 1; i <= totalProps; i++) {
+            (, address propertyOwner,,,,,,,,) = realEstate.getProperty(i);
+            assertNotEq(propertyOwner, address(0), "Property owner is zero address");
+        }
     }
 
     //// Helper functions
